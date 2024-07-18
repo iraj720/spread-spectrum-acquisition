@@ -81,6 +81,7 @@ f_carrier = 50
 accuracy = 5
 threshold = 0.7
 transmitted_signal_delay = 0 # samples
+delta_T = 1 # samples
 lables = True
 filter_order = 6
 filter_fs = f_carrier    # sample rate, Hz
@@ -90,7 +91,6 @@ proccessing_gain = int(f_chip / f_data)
 data_points = f_data * total_time
 all_chips = int(f_chip * total_time)
 all_points = int(all_chips * accuracy)
-
 
 
 ##########################################   Transmitter ########################################
@@ -155,7 +155,7 @@ for i in range(pn_code_len):
     code_2 = np.repeat(code_2, accuracy)
     code_2 = np.resize(code_2, all_chips)
     code_2 = np.repeat(code_2, accuracy)
-    code_2 = circular_shift(code_2, transmitted_signal_delay + 1, True)
+    code_2 = circular_shift(code_2, transmitted_signal_delay + delta_T, True)
 
     # despreading signal
     despreaded_2 = code_2 * transmitted_signal
