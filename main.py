@@ -79,8 +79,8 @@ f_data = 5
 f_chip = 50
 f_carrier = 50
 accuracy = 5
-threshold = 0.9
-transmitted_signal_delay = 2 # samples
+threshold = 0.7
+transmitted_signal_delay = 0 # samples
 lables = True
 filter_order = 6
 filter_fs = f_carrier    # sample rate, Hz
@@ -151,11 +151,11 @@ max_detected_energy_detected = []
 
 # start of acquisition loop :
 for i in range(pn_code_len):
-    code_2 = pn_code(g30, i % pn_code_len) * 2 - 1
+    code_2 = pn_code(g30, i + 1 % pn_code_len) * 2 - 1
     code_2 = np.repeat(code_2, accuracy)
     code_2 = np.resize(code_2, all_chips)
     code_2 = np.repeat(code_2, accuracy)
-    code_2 = circular_shift(code_2, 5, True)
+    code_2 = circular_shift(code_2, transmitted_signal_delay + 1, True)
 
     # despreading signal
     despreaded_2 = code_2 * transmitted_signal
@@ -169,6 +169,7 @@ for i in range(pn_code_len):
     detected_2 = detect(y_2, int(all_points / data_points)) * 2
 
     detected_energy_2 = np.mean(detected_2)
+    print(detected_energy_2)
     if detected_energy_2 > max_detected_energy:
         max_detected_energy = detected_energy_2
         max_detected_energy_code = code_2
